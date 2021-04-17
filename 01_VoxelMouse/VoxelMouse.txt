@@ -1,0 +1,208 @@
+
+# # Parameter file for a voxel mouse phantom using TsVoxelPhantom
+
+
+# ----- Visualization -----
+
+# s:Gr/Figure1/Type                              = "OpenGL"
+# b:Gr/Figure1/CopyOpenGLToEPS                   = "True"
+# u:Gr/Figure1/Zoom                              = .8
+# b:Gr/Figure1/HiddenLineRemovalForGeometry      = "t"
+# b:Gr/Figure1/HiddenLineRemovalForTrajectories  = "t"
+# b:Gr/Figure1/IncludeTrajectories           	   = "t"
+# d:Gr/Figure1/PerspectiveAngle                  = 90 deg
+# d:Gr/Figure1/Theta                             = 95 deg # x axis
+# d:Gr/Figure1/Phi                               = 0 deg # y axis
+# #b:Gr/Figure1/IncludeStepPoints				   = "True"
+# #sv:Gr/OnlyIncludeParticlesNamed        = 1 "e-"
+# i:Gr/ShowOnlyOutlineIfVoxelCountExceeds = 2100000
+
+
+# b:Ts/PauseBeforeQuit = "True"
+
+# i:Ts/TrackingVerbosity = 4
+
+
+# ----- Multithreading -----
+
+i:Ts/NumberOfThreads = 4
+
+
+# ----- Physics -----
+
+sv:Ph/Default/Modules = 1 "g4em-standard_opt3" # "g4em-dna_opt2" # "g4em-dna-chemistry" # 
+b:Ph/Default/Fluorescence = "True"
+b:Ph/Default/Auger = "True"
+b:Ph/Default/PIXE = "True"
+b:Ph/Default/AugerCascade = "True"
+b:Ph/Default/DeexcitationIgnoreCut = "True"
+d:Ph/Default/EMRangeMin = 100. eV
+d:Ph/Default/EMRangeMax = 1. MeV
+d:Ph/Default/CutForGamma = .1 mm
+d:Ph/Default/CutForElectron = .1 mm
+
+
+# ----- Geometry -----
+
+s:Ge/World/Material    = "G4_AIR"
+d:Ge/World/HLX         = 60 mm
+d:Ge/World/HLY         = 60 mm
+d:Ge/World/HLZ         = 80 mm
+b:Ge/World/Invisible   = "true"
+
+s:Ge/MousePhantom/Type			= "TsVoxelPhantom"
+s:Ge/MousePhantom/InputDirectory	= "./"
+s:Ge/MousePhantom/FileName		= "Mouse_Phantom.bin"
+b:Ge/MousePhantom/testmode = "false"
+
+i:Ge/MousePhantom/VoxelXCount		= 200
+i:Ge/MousePhantom/VoxelYCount		= 200
+i:Ge/MousePhantom/VoxelZCount		= 512
+d:Ge/MousePhantom/VoxelXLength		= .2 mm
+d:Ge/MousePhantom/VoxelYLength		= .2 mm
+d:Ge/MousePhantom/VoxelZLength		= .2 mm
+
+# Please use only flags >=0
+i:Ge/MousePhantom/FlagForMaterial_Air				= 9
+i:Ge/MousePhantom/FlagForMaterial_OtherTissue		= 8
+i:Ge/MousePhantom/FlagForMaterial_Skin				= 11
+i:Ge/MousePhantom/FlagForMaterial_Heart				= 12
+i:Ge/MousePhantom/FlagForMaterial_Blood				= 13
+i:Ge/MousePhantom/FlagForMaterial_Liver				= 14
+i:Ge/MousePhantom/FlagForMaterial_Gall_Bladder		= 15
+i:Ge/MousePhantom/FlagForMaterial_Lung				= 16
+i:Ge/MousePhantom/FlagForMaterial_Stomach			= 17
+i:Ge/MousePhantom/FlagForMaterial_Airway			= 18
+i:Ge/MousePhantom/FlagForMaterial_Pancreas			= 19
+i:Ge/MousePhantom/FlagForMaterial_Kidney			= 20
+i:Ge/MousePhantom/FlagForMaterial_Spleen			= 21
+i:Ge/MousePhantom/FlagForMaterial_Small_Intestine	= 22
+i:Ge/MousePhantom/FlagForMaterial_Large_Intestine	= 23
+i:Ge/MousePhantom/FlagForMaterial_Bladder			= 24
+i:Ge/MousePhantom/FlagForMaterial_VasDef			= 25
+i:Ge/MousePhantom/FlagForMaterial_Testes			= 26
+i:Ge/MousePhantom/FlagForMaterial_Skeleton			= 27
+i:Ge/MousePhantom/FlagForMaterial_Brain				= 28
+i:Ge/MousePhantom/FlagForMaterial_Thyroid			= 29
+
+s:Ge/MousePhantom/Parent   = "World"
+d:Ge/MousePhantom/TransX   = 0. m
+d:Ge/MousePhantom/TransY   = 0. m
+d:Ge/MousePhantom/TransZ   = 0. m
+d:Ge/MousePhantom/RotX     = 0. deg
+d:Ge/MousePhantom/RotY     = 0. deg
+d:Ge/MousePhantom/RotZ     = 0. deg
+
+s:Ge/MousePhantom/Material = "G4_WATER" # to avoid of Topas error
+
+b:Ge/MousePhantom/Tumor 			= "True" # must be true to insert tumor
+# central voxel (all coordinates > 0)
+i:Ge/MousePhantom/TumorCenterX		= 136
+i:Ge/MousePhantom/TumorCenterY		= 71
+i:Ge/MousePhantom/TumorCenterZ		= 150
+# Tumor shape is an ellisoid
+d:Ge/MousePhantom/TumorRadiusX		= 2.5 mm
+d:Ge/MousePhantom/TumorRadiusY		= 2. mm
+d:Ge/MousePhantom/TumorRadiusZ		= 2.5 mm
+
+# -- For visualization --
+iv:Ge/MousePhantom/ShowAreaZ = 2 165 170 # set shown slices
+b:Ge/MousePhantom/SkinIsVisible					= "true"
+b:Ge/MousePhantom/OtherTissueIsVisible			= "false"
+
+
+# ----- Beam -----
+
+# includeFile = Beam_100kVp.txt
+includeFile = Beam_200kVp.txt
+
+# Beam Rotation
+s:Ge/BeamPosition/Parent = "World"
+s:Ge/BeamPosition/Type = "Group"
+
+# Scoring with replication requires this rotation
+d:Ge/BeamPosition/RotX = 90. deg
+d:Ge/BeamPosition/RotY = 0. deg
+d:Ge/BeamPosition/RotZ = 90. deg
+# Beam Position is set later
+
+s:So/SARRPbeam/Type = "Beam" # Beam, Isotropic, Emittance or PhaseSpace
+
+s:So/SARRPbeam/Component = "BeamPosition"
+s:So/SARRPbeam/BeamParticle = "gamma"
+s:So/SARRPbeam/BeamPositionDistribution = "Flat" # None, Flat or Gaussian
+s:So/SARRPbeam/BeamPositionCutoffShape = "Ellipse" # Point, Ellipse, Rectangle or Isotropic
+d:So/SARRPbeam/BeamPositionCutoffX = 2.5 mm
+d:So/SARRPbeam/BeamPositionCutoffY = 2.5 mm
+s:So/SARRPbeam/BeamAngularDistribution = "None" # None, Flat or Gaussian
+
+i:So/SARRPbeam/NumberOfHistoriesInRun = 220000
+i:Ts/ShowHistoryCountAtInterval = 5000
+
+
+# ----- Scorer -----
+
+d:VoxelHalfLengthX = 0.5 * Ge/MousePhantom/VoxelXLength mm
+d:VoxelHalfLengthY = 0.5 * Ge/MousePhantom/VoxelYLength mm
+d:VoxelHalfLengthZ = 0.5 * Ge/MousePhantom/VoxelZLength mm
+
+d:ContainerWallX = VoxelHalfLengthX mm * Ge/MousePhantom/VoxelXCount
+d:ContainerWallY = VoxelHalfLengthY mm * Ge/MousePhantom/VoxelYCount
+d:ContainerWallZ = VoxelHalfLengthZ mm * Ge/MousePhantom/VoxelZCount
+
+i:TumCtrVoxel2X = 2 * Ge/MousePhantom/TumorCenterX
+i:TumCtrVoxel2Y = 2 * Ge/MousePhantom/TumorCenterY
+i:TumCtrVoxel2Z = 2 * Ge/MousePhantom/TumorCenterZ
+
+i:TumCtrVoxel21X = 1 + TumCtrVoxel2X
+i:TumCtrVoxel21Y = 1 + TumCtrVoxel2Y
+i:TumCtrVoxel21Z = 1 + TumCtrVoxel2Z
+
+d:TumCtrOffsetX = VoxelHalfLengthX mm * TumCtrVoxel21X
+d:TumCtrOffsetY = VoxelHalfLengthY mm * TumCtrVoxel21Y
+d:TumCtrOffsetZ = VoxelHalfLengthZ mm * TumCtrVoxel21Z
+
+d:TumCtrTransX = TumCtrOffsetX - ContainerWallX mm
+d:TumCtrTransY = TumCtrOffsetY - ContainerWallY mm
+d:TumCtrTransZ = TumCtrOffsetZ - ContainerWallZ mm
+
+d:TumorCenterPosX = TumCtrTransX + Ge/MousePhantom/TransX mm
+d:TumorCenterPosY = TumCtrTransY + Ge/MousePhantom/TransY mm
+d:TumorCenterPosZ = TumCtrTransZ + Ge/MousePhantom/TransZ mm
+
+# position beam 20cm below the tumor center
+d:Ge/BeamPosition/TransX = TumorCenterPosX mm
+d:Ge/BeamPosition/TransY = TumorCenterPosY - 20 cm
+d:Ge/BeamPosition/TransZ = TumorCenterPosZ mm
+
+
+# Tuple Scorer All Incoming Particles
+
+s:Sc/TupleDoseAll/Quantity = "TsScorePhaseSpaceVoxelTumor"
+s:Sc/TupleDoseAll/Component = "World"
+s:Sc/TupleDoseAll/OutputType = "Binary"
+b:Sc/TupleDoseAll/OutputToConsole = "False"
+s:Sc/TupleDoseAll/OutputFile = "tupleDataAll"
+s:Sc/TupleDoseAll/IfOutputFileAlreadyExists = "Overwrite"
+# d:Sc/TupleDoseAll/TimeCut = 10. ns
+b:Sc/TupleDoseAll/PropagateToChildren = "True"
+
+# For scoring hits in cylinders, the relevant information can be retrieved
+# b:Sc/TupleDoseAll/IncludeRunID                = "True"
+# b:Sc/TupleDoseAll/IncludeEventID              = "True"
+# b:Sc/TupleDoseAll/IncludeTrackID              = "True"
+# b:Sc/TupleDoseAll/IncludeParentID             = "True"
+# b:Sc/TupleDoseAll/IncludeVertexInfo           = "True"
+# b:Sc/TupleDoseAll/IncludeSeed                 = "True"
+
+b:Sc/TupleDoseAll/KillAfterPhaseSpace  = "True"
+
+dv:Sc/TupleDoseAll/TumorCenterPos = 3 TumorCenterPosX TumorCenterPosY TumorCenterPosZ mm
+
+b:Sc/TupleDoseAll/SubdivideTumor 	= "False"
+
+d:Sc/TupleDoseAll/TumorRadiusX		= Ge/MousePhantom/TumorRadiusX mm
+d:Sc/TupleDoseAll/TumorRadiusY		= Ge/MousePhantom/TumorRadiusY mm
+d:Sc/TupleDoseAll/TumorRadiusZ		= Ge/MousePhantom/TumorRadiusZ mm
+
+i:Sc/TupleDoseAll/NbOfRepeats		= 750
