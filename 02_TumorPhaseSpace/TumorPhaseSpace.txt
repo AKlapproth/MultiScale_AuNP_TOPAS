@@ -1,0 +1,160 @@
+
+# # Parameter file for a tumor phase space scoring 3 different cell phase spaces
+
+
+# ----- Visualization -----
+
+# s:Gr/Figure1/Type                              = "OpenGL"
+# b:Gr/Figure1/CopyOpenGLToEPS                   = "True"
+# u:Gr/Figure1/Zoom                              = .8
+# b:Gr/Figure1/HiddenLineRemovalForGeometry      = "t"
+# b:Gr/Figure1/HiddenLineRemovalForTrajectories  = "t"
+# b:Gr/Figure1/IncludeTrajectories           	   = "t"
+# d:Gr/Figure1/PerspectiveAngle                  = 90 deg
+# d:Gr/Figure1/Theta                             = 180 deg # x axis
+# d:Gr/Figure1/Phi                               = 90 deg # y axis
+# #b:Gr/Figure1/IncludeStepPoints				   = "True"
+# #sv:Gr/OnlyIncludeParticlesNamed        = 1 "e-"
+
+# b:Ts/PauseBeforeQuit = "True"
+
+
+# ----- Multithreading -----
+
+i:Ts/NumberOfThreads = 4
+
+
+# ----- Physics -----
+
+# Default physics settings
+sv:Ph/Default/Modules = 1 "g4em-standard_opt3" # "g4em-dna_opt2" # "g4em-dna-chemistry" # 
+b:Ph/Default/Fluorescence = "True"
+b:Ph/Default/Auger = "True"
+b:Ph/Default/PIXE = "True"
+b:Ph/Default/AugerCascade = "True"
+b:Ph/Default/DeexcitationIgnoreCut = "True"
+d:Ph/Default/EMRangeMin = 100. eV
+#d:Ph/Default/EMRangeMax = 1. MeV
+
+
+# ----- Geometry -----
+
+s:Ge/World/Material    = "G4_WATER"
+d:Ge/World/HLX         = 10 mm
+d:Ge/World/HLY         = 10 mm
+d:Ge/World/HLZ         = 10 mm
+b:Ge/World/Invisible   = "true"
+
+s:Ge/Tumor/Type              = "G4Ellipsoid"
+s:Ge/Tumor/Parent            = "World"
+s:Ge/Tumor/Material          = "G4_WATER"
+d:Ge/Tumor/HLX               = 2.5 mm
+d:Ge/Tumor/HLY               = 2. mm
+d:Ge/Tumor/HLZ               = 2.5 mm
+s:Ge/Tumor/Color             = "orange"
+s:Ge/Tumor/DrawingStyle      = "WireFrame"
+b:Ge/Tumor/Invisible   		 = "false"
+
+# +++ 3 cell sized orbs +++
+
+s:Ge/CellFC/Type                    = "TsSphere"
+s:Ge/CellFC/Parent                  = "Tumor"
+s:Ge/CellFC/Material                = "G4_WATER"
+d:Ge/CellFC/TransX                  = 0 mm
+d:Ge/CellFC/TransY                  = -1.89 mm
+d:Ge/CellFC/TransZ                  = 0 mm
+d:Ge/CellFC/RMax                    = 50 um
+s:Ge/CellFC/Color                   = "blue"
+s:Ge/CellFC/DrawingStyle            = "Solid"
+
+s:Ge/CellCC/Type                    = "TsSphere"
+s:Ge/CellCC/Parent                  = "Tumor"
+s:Ge/CellCC/Material                = "G4_WATER"
+d:Ge/CellCC/TransX                  = 0 mm
+d:Ge/CellCC/TransY                  = 0 mm
+d:Ge/CellCC/TransZ                  = 0 mm
+d:Ge/CellCC/RMax                    = 50 um
+s:Ge/CellCC/Color                   = "blue"
+s:Ge/CellCC/DrawingStyle            = "Solid"
+
+s:Ge/CellBC/Type                    = "TsSphere"
+s:Ge/CellBC/Parent                  = "Tumor"
+s:Ge/CellBC/Material                = "G4_WATER"
+d:Ge/CellBC/TransX                  = 0 mm
+d:Ge/CellBC/TransY                  = 1.89 mm
+d:Ge/CellBC/TransZ                  = 0 mm
+d:Ge/CellBC/RMax                    = 50 um
+s:Ge/CellBC/Color                   = "blue"
+s:Ge/CellBC/DrawingStyle            = "Solid"
+
+
+# ----- Beam -----
+
+s:So/PhaseSpaceT/Type = "PhaseSpace" # Beam, Isotropic, Emittance or PhaseSpace
+
+s:So/PhaseSpaceT/Component = "World"
+
+s:So/PhaseSpaceT/PhaseSpaceFileName = "tupleDataAll"
+b:So/PhaseSpaceT/PhaseSpaceIncludeEmptyHistories = "False"
+
+i:Ts/ShowHistoryCountAtInterval = 500000
+
+
+# ----- Scorer -----
+
+# Energy Deposit Scorer
+s:Sc/EnDepSc/Quantity					= "EnergyDeposit"
+s:Sc/EnDepSc/Component					= "Tumor"
+s:Sc/EnDepSc/IfOutputFileAlreadyExists	= "Overwrite"
+b:Sc/EnDepSc/OutputToConsole			= "True"
+
+b:Sc/EnDepSc/PropagateToChildren = "True"
+
+# Dose to Water Scorer
+s:Sc/Dose2WaterSc/Quantity                          = "DoseToWater"
+s:Sc/Dose2WaterSc/Component                         = "Tumor"
+b:Sc/Dose2WaterSc/OutputToConsole                   = "TRUE"
+s:Sc/Dose2WaterSc/IfOutputFileAlreadyExists         = "Overwrite"
+
+b:Sc/Dose2WaterSc/PropagateToChildren = "True"
+
+# +++ Phase Space Scorers +++
+
+s:Sc/PhSpFC/Quantity					= "TsScorePhaseSpaceT"
+b:Sc/PhSpFC/OutputToConsole				= "True"
+s:Sc/PhSpFC/Surface						= "CellFC/OuterCurvedSurface"
+s:Sc/PhSpFC/OutputType					= "Binary" # ASCII, Binary, Limited or ROOT
+s:Sc/PhSpFC/OutputFile					= "PhSpFC"
+s:Sc/PhSpFC/OnlyIncludeParticlesGoing	= "In"
+s:Sc/PhSpFC/IfOutputFileAlreadyExists	= "Overwrite"
+d:Sc/PhSpFC/OffsetX						= Ge/CellFC/TransX mm
+d:Sc/PhSpFC/OffsetY						= Ge/CellFC/TransY mm
+d:Sc/PhSpFC/OffsetZ						= Ge/CellFC/TransZ mm
+d:Sc/PhSpFC/ActualCellRadius			= 10 um
+i:Sc/PhSpFC/NbOfRepeats					= 100
+
+s:Sc/PhSpCC/Quantity					= "TsScorePhaseSpaceT"
+b:Sc/PhSpCC/OutputToConsole				= "True"
+s:Sc/PhSpCC/Surface						= "CellCC/OuterCurvedSurface"
+s:Sc/PhSpCC/OutputType					= "Binary" # ASCII, Binary, Limited or ROOT
+s:Sc/PhSpCC/OutputFile					= "PhSpCC"
+s:Sc/PhSpCC/OnlyIncludeParticlesGoing	= "In"
+s:Sc/PhSpCC/IfOutputFileAlreadyExists	= "Overwrite"
+d:Sc/PhSpCC/OffsetX						= Ge/CellCC/TransX mm
+d:Sc/PhSpCC/OffsetY						= Ge/CellCC/TransY mm
+d:Sc/PhSpCC/OffsetZ						= Ge/CellCC/TransZ mm
+d:Sc/PhSpCC/ActualCellRadius			= 10 um
+i:Sc/PhSpCC/NbOfRepeats					= 100
+
+s:Sc/PhSpBC/Quantity					= "TsScorePhaseSpaceT"
+b:Sc/PhSpBC/OutputToConsole				= "True"
+s:Sc/PhSpBC/Surface						= "CellBC/OuterCurvedSurface"
+s:Sc/PhSpBC/OutputType					= "Binary" # ASCII, Binary, Limited or ROOT
+s:Sc/PhSpBC/OutputFile					= "PhSpBC"
+s:Sc/PhSpBC/OnlyIncludeParticlesGoing	= "In"
+s:Sc/PhSpBC/IfOutputFileAlreadyExists	= "Overwrite"
+d:Sc/PhSpBC/OffsetX						= Ge/CellBC/TransX mm
+d:Sc/PhSpBC/OffsetY						= Ge/CellBC/TransY mm
+d:Sc/PhSpBC/OffsetZ						= Ge/CellBC/TransZ mm
+d:Sc/PhSpBC/ActualCellRadius			= 10 um
+i:Sc/PhSpBC/NbOfRepeats					= 100

@@ -1,0 +1,7 @@
+DNAContentperFiber(bp): 15150
+DNAContentperVoxel(bp): 212100
+DNAContentinTotal(bp): 5.1883e+9
+NucluesMass(g): 1.376055e-9
+NumberofVoxels(subdomains): 24464
+Voxel3DrepeatTimes: 36
+VoxelSize(um): 0.383333

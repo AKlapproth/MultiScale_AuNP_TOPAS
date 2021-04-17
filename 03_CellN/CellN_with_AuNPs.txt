@@ -1,0 +1,186 @@
+
+# # Parameter file for one cell including a detailled DNA model
+# # Nanoparticles are scattered randomly around the nucleus
+
+
+# ----- Visualization -----
+
+# OpenGL, HepRep, VRML, DAWN, RayTracer, RayTracerX
+# s:Gr/Figure1/Type                              = "OpenGL"
+# b:Gr/Figure1/CopyOpenGLToEPS                   = "True"
+# u:Gr/Figure1/Zoom                              = 1
+# b:Gr/Figure1/HiddenLineRemovalForGeometry      = "f"
+# b:Gr/Figure1/HiddenLineRemovalForTrajectories  = "t"
+# # d:Gr/Figure1/PerspectiveAngle                  = 90 deg
+# # d:Gr/Figure1/Theta                             = 90 deg
+# # d:Gr/Figure1/Phi                               = 10 
+# # sv:Gr/OnlyIncludeParticlesNamed        = 1 "e-"
+
+# b:Ts/PauseBeforeQuit = "True"
+
+
+# ----- Multithreading -----
+
+i:Ts/NumberOfThreads = 4
+
+
+# ----- Physics -----
+
+Ge/CheckForOverlaps = "False"
+
+sv:Ph/Default/Modules = 2 "g4em-livermore" "g4em-dna-chemistry" # "g4em-dna_opt2" # "TsEmDNAPhysics" # "g4em-dna-chemistry" # 
+b:Ph/Default/Fluorescence = "True"
+b:Ph/Default/Auger = "True"
+b:Ph/Default/PIXE = "True"
+b:Ph/Default/AugerCascade = "True"
+b:Ph/Default/DeexcitationIgnoreCut = "True"
+
+includeFile = ./supportFiles/TOPASChemistry.txt
+s:Ch/ChemistryName = "TOPAS"
+b:Ch/TOPAS/ChemicalStageTransportActive = "true" # set transportaion flag
+d:Ch/TOPAS/ChemicalStageTimeEnd = 1.0 ns  #set the duration for chemical satge
+dv:Ch/TOPAS/AddTimeStepHighEdge = 1 999999 ps
+dv:Ch/TOPAS/AddTimeStepResolution = 1 0.5 ps
+
+# G4DNA settings
+s:Ge/Target/AssignToRegionNamed = "tareg"
+s:Ph/Default/ForRegion/tareg/ActiveG4EmModelFromModule = "g4em-dna-chemistry" # "g4em-dna" # "TsEmDNAPhysics" # 
+d:Ph/Default/ForRegion/tareg/SetProductionCutLowerEdge = 15 eV
+d:Ph/Default/ForRegion/tareg/SetProductionCutHighEdge = 1 MeV
+d:Ph/Default/ForRegion/tareg/EMRangeMin = 15 eV
+d:Ph/Default/ForRegion/tareg/EMRangeMax = 1 MeV
+d:Ph/Default/ForRegion/tareg/CutForElectrons = 0.1 nm
+
+# Livermore settings
+s:Ph/Default/ForRegion/aunpreg/ActiveG4EmModelNamed = "g4em-livermore"
+d:Ph/Default/ForRegion/aunpreg/SetProductionCutLowerEdge = 10 eV
+d:Ph/Default/ForRegion/aunpreg/SetProductionCutHighEdge = 1 MeV
+d:Ph/Default/ForRegion/aunpreg/EMRangeMin = 10 eV
+d:Ph/Default/ForRegion/aunpreg/EMRangeMax = 1 MeV
+d:Ph/Default/ForRegion/aunpreg/CutForElectrons = 0.1 nm
+
+
+# ----- Geometry -----
+
+# World
+d:Ge/World/HLX       = 30 um
+d:Ge/World/HLY       = 30 um
+d:Ge/World/HLZ       = 30 um
+s:Ge/World/Material  = "G4_WATER"
+b:Ge/World/Invisible = "True"
+s:Ge/World/Color     = "Aqua"
+s:Ge/World/DrawingStyle = "WireFrame"
+
+# Target
+s:Ge/Target/Type 			= "G4Orb"
+s:Ge/Target/Parent 			= "World"
+s:Ge/Target/Material 		= "G4_WATER"
+d:Ge/Target/R 				= 10.1 um
+s:Ge/Target/Color 			= "aqua"
+b:Ge/Target/Invisible 		= "True"
+
+# Cell
+s:Ge/TheCell/Type = "TsEllipsoidCellNAK"
+s:Ge/TheCell/Material = "G4_WATER"
+s:Ge/TheCell/Parent = "Target"
+s:Ge/TheCell/Color = "green"
+# Volume: Oelze et al (4T1)
+d:Ge/TheCell/xSemiAxis = 10 um
+d:Ge/TheCell/ySemiAxis = 10 um
+d:Ge/TheCell/zSemiAxis = 10 um
+b:Ge/TheCell/Invisible 		= "True"
+
+# s:Ge/TheCell/Type 			= "G4Orb"
+# s:Ge/TheCell/Parent 			= "Target"
+# s:Ge/TheCell/Material 		= "G4_WATER"
+# d:Ge/TheCell/R 				= 10 um
+# s:Ge/TheCell/Color 			= "green"
+# b:Ge/TheCell/Invisible 		= "True"
+
+# Nucleus
+d:Ge/TheCell/Nucleus/FibreLength   = 120 nm  # please set <= 120 nm
+d:Ge/TheCell/Nucleus/NucleusRadius = 6.9 um  # Oelze et al (4T1)
+b:Ge/TheCell/Nucleus/AddHydrationShell     = "true"   # "true" or "false"
+s:Ge/TheCell/Nucleus/FileName              = "HilbertPoints_iteration1.dat"
+i:Ge/TheCell/Nucleus/HilbertCurveLayer     = 2
+i:Ge/TheCell/Nucleus/HilbertCurve3DRepeat  = 36
+d:Ge/TheCell/Nucleus/ToleranceSpace  = .14913333278374 um
+d:Ge/TheCell/Nucleus/NuclTransX = 0. um
+d:Ge/TheCell/Nucleus/NuclTransY = 0. um
+d:Ge/TheCell/Nucleus/NuclTransZ = 0. um
+
+#AuNPs
+# NPs can only be included if the Nucleus center is at (0,0,0)
+# 35610: Amount of 2nm AuFeNPs to have 5ug/ml in a r=10um cell
+i:Ge/TheCell/AuNPs/NbOfAuNPsInCytoplasm = 1000000 #35610 # must be defined to have AuNPs (may be 0)
+i:Ge/TheCell/AuNPs/NbOfAuNPsInNucleus = 0
+d:Ge/TheCell/AuNPs/MaxDistFromNucleus = 100 nm
+d:Ge/TheCell/AuNPs/Rmax = 1 nm
+d:Ge/TheCell/AuNPs/Rcore = 1 nm
+s:Ge/TheCell/AuNPs/Material = "G4_Au"
+s:Ge/TheCell/AuNPC/Material = "G4_Au"
+s:Ge/TheCell/AuNPN/Material = "G4_Au"
+s:Ge/TheCell/AuNPCore/Material = "G4_Fe" # Gets replaced in extension
+s:Ge/TheCell/AuNPC/Color = "orange"
+s:Ge/TheCell/AuNPC/DrawingStyle = "solid"
+s:Ge/TheCell/AuNPN/Color = "aqua"
+s:Ge/TheCell/AuNPN/DrawingStyle = "solid"
+
+Assign region
+s:Ge/TheCell/AuNPs/AssignToRegionNamed = "aunpreg"
+s:Ge/TheCell/AuNPN/AssignToRegionNamed = "aunpreg"
+s:Ge/TheCell/AuNPC/AssignToRegionNamed = "aunpreg"
+
+
+# ----- Beam -----
+
+s:So/PhaseSpaceC/Type = "PhaseSpace" # Beam, Isotropic, Emittance or PhaseSpace
+
+s:So/PhaseSpaceC/Component = "World"
+
+s:So/PhaseSpaceC/PhaseSpaceFileName = "PhaseSpaceData/PhSpBC" # BC CC FC
+b:So/PhaseSpaceC/PhaseSpaceIncludeEmptyHistories = "False"
+
+i:Ts/ShowHistoryCountAtInterval = 100000
+
+#i:So/PhaseSpaceC/PhaseSpaceMultipleUse = 0
+#i:So/PhaseSpaceC/NumberOfHistoriesInRun = 6200000 # for testing
+
+
+# ----- Scorer -----
+
+s:Sc/DoseCell/Quantity                  = "EnergyDeposit"
+s:Sc/DoseCell/Component                 = "TheCell"
+s:Sc/DoseCell/IfOutputFileAlreadyExists = "Overwrite"
+b:Sc/DoseCell/OutputToConsole           = "True"
+sv:Sc/DoseCell/OnlyIncludeIfInMaterial  = 1 "G4_WATER"
+b:Sc/DoseCell/PropagateToChildren		= "True"
+
+# Dose to Water Scorer
+s:Sc/Dose2WaterSc/Quantity                          = "DoseToWater"
+s:Sc/Dose2WaterSc/Component                         = "TheCell"
+b:Sc/Dose2WaterSc/OutputToConsole                   = "TRUE"
+s:Sc/Dose2WaterSc/IfOutputFileAlreadyExists         = "Overwrite"
+b:Sc/Dose2WaterSc/PropagateToChildren = "True"
+
+# DSB Scorer
+s:Sc/Hits/Quantity = "DSBFibreAK"
+d:Sc/Hits/DamageThreshold = 17.5 eV #17.5 eV
+b:Sc/Hits/UseLinearProbabilitythreshold = "false"  # "true" or "false"
+d:Sc/Hits/ScoringRadius = Ge/TheCell/Nucleus/NucleusRadius um
+d:Sc/Hits/ScoringTransX = Ge/TheCell/Nucleus/NuclTransX um
+d:Sc/Hits/ScoringTransY = Ge/TheCell/Nucleus/NuclTransY um
+d:Sc/Hits/ScoringTransZ = Ge/TheCell/Nucleus/NuclTransZ um
+s:Sc/Hits/Component = "TheCell"
+s:Sc/Hits/OutputType = "ascii"
+s:Sc/Hits/OutputFile = Sc/Hits/Quantity 
+s:Sc/Hits/IfOutputFileAlreadyExists = "Overwrite"
+b:Sc/Hits/PropagateToChildren = "True"
+b:Sc/Hits/IncludeDSBDamageSitesOnlyinSDD = "True"
+u:Sc/Hits/DosePerExposoure = 1 # Unit:Gy
+b:Sc/Hits/ExcludeShortFragment = "True"
+i:Sc/Hits/LowerFragmentDetectionThreshold = 10000
+u:Sc/Hits/ProbabilityForOHToCauseDamage = 0.4
+i:Sc/Hits/NumberOfHistoriesInRun = 6200300 # from phase space header
+#i:Sc/Hits/NumberOfHistoriesInRun = So/PhaseSpaceC/NumberOfHistoriesInRun
+
